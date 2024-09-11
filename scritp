@@ -1,6 +1,7 @@
 (function() {
     console.log('%cHello!\nThis script will check how your Facebook pixels are configured.\nIf anything shows up in red, it could pose a risk of PII leaks and should require attention!', 'color: white;');
-    if (typeof _fbq.instance.pixelsByID !== 'undefined') {     
+    
+    if (typeof _fbq !== 'undefined') {     
         //console.log(`%cFacebook Pixel detected on this site`, ';'); 
         let pixelsOnSite =  Object.keys(_fbq.instance.pixelsByID);   // string.split(',') Object.keys(jsonData);
         console.log(`%cThese Facebook pixels were found on the site ${pixelsOnSite.join(', ')}.`, ';');
