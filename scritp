@@ -20,13 +20,10 @@
         }
     
         // Check for Automatic Setup
+        console.log("\nNow we are going to check if Advanced Setup is de-activated.");
         if (typeof _fbq.instance.optIns._opts.AutomaticSetup === 'undefined') {
-        
             console.log('%cAdvanced setup is not de-activated on this site for any pixel. This means that user events are automatically tracked and sensitive information could be sent to Meta servers.', 'color: red;');
-            
         } else {
-
-            console.log("\nNow we are going to check if Advanced Setup is de-activated.");
             let pixelsThareAreOptOutOfAS = _fbq.instance.optIns._opts.AutomaticSetup;
             
             pixelsOnSite.forEach(pixelID => {
