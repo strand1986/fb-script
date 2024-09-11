@@ -5,20 +5,18 @@
         //console.log(`%cFacebook Pixel detected on this site`, ';'); 
         let pixelsOnSite =  Object.keys(_fbq.instance.pixelsByID);   // string.split(',') Object.keys(jsonData);
         console.log(`%cThese Facebook pixels were found on the site ${pixelsOnSite.join(', ')}.`, ';');
-        
-        // Check for Automatic Matching
-        console.log("");
-        console.log("Now we are going to check if Advanced Matching (collection of PII) is activated.");
-        if (typeof _fbq.instance.optIns._opts.AutomaticMatching === 'undefined') {
-            console.log('%cAdvanced matching is NOT activated on this site for any pixel. Looks like you are safe!', 'color: green;');
-        } else {
-            let matching = _fbq.instance.optIns._opts.AutomaticMatching;
-            for (let pixelID in matching) {
-                if (matching.hasOwnProperty(pixelID)) {
-                    console.log(`%cAdvanced matching IS activated on this site for the pixelID ${pixelID}. This means that personal identifiers can be scraped and sent to Meta servers.`, 'color: red;');
-                }
+
+        //Check for Automaic Matching v2
+        console.log("\nNow we are going to check if Advanced Matching (collection of PII) is activated.");
+
+        matching = _fbq.instance.optIns._opts.AutomaticMatching
+        pixelsOnSite.forEach(pixelID => {
+            if (pixelID in matching && matching[pixelID] ) {
+                console.log(`%cPixel ${pixelID} have activated Advanced Matching! This means that personal identifiers can be scraped and sent to Meta servers.` , 'color: red;');
+            } else {
+                console.log(`%cPixel ${pixelID} have not activated Advanced Matching. You should be safe! `, 'color: green;');
             }
-        }
+            });
     
         // Check for Automatic Setup
         console.log("\nNow we are going to check if Advanced Setup (collection of events) is de-activated.");
@@ -30,12 +28,12 @@
             pixelsOnSite.forEach(pixelID => {
             if (pixelID in pixelsThareAreOptOutOfAS) {
                 if (!pixelsThareAreOptOutOfAS[pixelID]) {
-                    console.log(`%cPixel ${pixelID} has opted out of Advanced Setup! It should not automatically collect user events.` , 'color: green;');
+                    console.log(`%cPixel ${pixelID} have de-activated Advanced Setup! It should not automatically collect user events.` , 'color: green;');
                 } else {
-                    console.log(`%cPixel ${pixelID} has not opted out. This means that user events are automatically tracked and sensitive information could be sent to Meta servers.`, 'color: red;');
+                    console.log(`%cPixel ${pixelID} have NOT de-activated. This means that user events are automatically tracked and sensitive information could be sent to Meta servers.`, 'color: red;');
                 }
             } else {
-                console.log(`%cPixel ${pixelID} has not opted out. This means that user events are automatically tracked and sensitive information could be sent to Meta servers.`, 'color: red;');
+                console.log(`%cPixel ${pixelID} have NOT de-activated. This means that user events are automatically tracked and sensitive information could be sent to Meta servers.`, 'color: red;');
             }
             });
             
