@@ -15,7 +15,7 @@
             let matching = _fbq.instance.optIns._opts.AutomaticMatching;
             for (let pixelID in matching) {
                 if (matching.hasOwnProperty(pixelID)) {
-                    console.log(`%cAdvanced matching IS activated on this site for the pixelID ${pixelID}. This means that personal identifiers can be scraped and sent to Meta servers..`, 'color: red;');
+                    console.log(`%cAdvanced matching IS activated on this site for the pixelID ${pixelID}. This means that personal identifiers can be scraped and sent to Meta servers.`, 'color: red;');
                 }
             }
         }
