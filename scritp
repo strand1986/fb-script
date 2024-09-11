@@ -1,19 +1,15 @@
 (function() {
+    console.log('%cHello!\nThis script will check how your Facebook pixels are configured.\nIf anything shows up in red, it could pose a risk of PII leaks and should require attention!', 'color: white;');
     if (typeof _fbq.instance.pixelsByID !== 'undefined') {     
         //console.log(`%cFacebook Pixel detected on this site`, ';'); 
-        let pixels = _fbq.instance.pixelsByID;
-        let pixelIDs ="";
-            for (let pixelID in pixels) {
-                if (pixels.hasOwnProperty(pixelID)) {
-                    //console.log(`%cFound this pixel on the site ${pixelID}.`, ';');
-                    pixelIDs += pixelID += " ";
-                }
-            }
-        console.log(`%cThese Facebook pixels were found on the site ${pixelIDs}.`, ';');
+        let pixelsOnSite =  Object.keys(_fbq.instance.pixelsByID);   // string.split(',') Object.keys(jsonData);
+        console.log(`%cThese Facebook pixels were found on the site ${pixelsOnSite.join(', ')}.`, ';');
         
         // Check for Automatic Matching
+        console.log("");
+        console.log("Now we are going to check if Advanced Matching is activated.");
         if (typeof _fbq.instance.optIns._opts.AutomaticMatching === 'undefined') {
-            console.log('%cAdvanced matching is NOT activated on this site for any pixel.', 'color: green;');
+            console.log('%cAdvanced matching is NOT activated on this site for any pixel. Looks like you are safe!', 'color: green;');
         } else {
             let matching = _fbq.instance.optIns._opts.AutomaticMatching;
             for (let pixelID in matching) {
@@ -25,16 +21,28 @@
     
         // Check for Automatic Setup
         if (typeof _fbq.instance.optIns._opts.AutomaticSetup === 'undefined') {
-            console.log('%cAdvanced setup is NOT activated on this site for any pixel.', 'color: green;');
+        
+            console.log('%cAdvanced setup is not de-activated on this site for any pixel. This means that user events are automatically tracked and sensitive information could be sent to Meta servers.', 'color: red;');
+            
         } else {
-            let setup = _fbq.instance.optIns._opts.AutomaticSetup;
-            for (let pixelID in setup) {
-                if (setup.hasOwnProperty(pixelID)) {
-                    console.log(`%cAdvanced setup IS activated on this site for the pixelID ${pixelID}. This means that user events are automatically tracked and sensitive information could be sent to Meta servers.`, 'color: red;');
+
+            console.log("\nNow we are going to check if Advanced Setup is de-activated.");
+            let pixelsThareAreOptOutOfAS = _fbq.instance.optIns._opts.AutomaticSetup;
+            
+            pixelsOnSite.forEach(pixelID => {
+            if (pixelID in pixelsThareAreOptOutOfAS) {
+                if (!pixelsThareAreOptOutOfAS[pixelID]) {
+                    console.log(`%cPixel ${pixelID} has opted out of Advanced Setup! It should not automatically collect user events.` , 'color: green;');
+                } else {
+                    console.log(`%cPixel ${pixelID} has not opted out. This means that user events are automatically tracked and sensitive information could be sent to Meta servers.`, 'color: red;');
                 }
+            } else {
+                console.log(`%cPixel ${pixelID} has not opted out. This means that user events are automatically tracked and sensitive information could be sent to Meta servers.`, 'color: red;');
             }
+            });
+            
         }
-    } else {console.log(`%cNo Facebook Pixel detected on this site`, 'color: white;'); }
-        console.log(`%cThis script is made by Ctrl Digital - If you need help or have questions about how to make your Facebook tracking safe, reach out to hello@ctrldigital.com`, 'color: white;');
+        } else {console.log(`%cNo Facebook Pixel detected on this site`, 'color: white;'); }  
+         console.log(`%c\nThis script is made by Ctrl Digital - If you need help or have questions about how to make your Facebook tracking safe, reach out to hello@ctrldigital.com`, 'color: white;');
 
 })();
